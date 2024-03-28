@@ -1,5 +1,31 @@
 package fr.ecole3il.rodez2023.carte.application;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import fr.ecole3il.rodez2023.carte.AdaptateurAlgorithme.AdaptateurAlgorithme;
+import fr.ecole3il.rodez2023.carte.chemin.algorithmes.AlgorithmeAEtoile;
+import fr.ecole3il.rodez2023.carte.chemin.algorithmes.AlgorithmeChemin;
+import fr.ecole3il.rodez2023.carte.chemin.algorithmes.AlgorithmeDijkstra;
+import fr.ecole3il.rodez2023.carte.elements.Carte;
+import fr.ecole3il.rodez2023.carte.elements.Case;
+import fr.ecole3il.rodez2023.carte.elements.Chemin;
+import fr.ecole3il.rodez2023.carte.elements.Tuile;
+import fr.ecole3il.rodez2023.carte.manipulateurs.GenerateurCarte;
+
 /**
  * @author p.roquart
  * voilà
@@ -42,7 +68,7 @@ public class CarteGUI extends JFrame {
 				if (choix.equals("Dijkstra")) {
 					algorithme = new AlgorithmeDijkstra();
 				} else if (choix.equals("A*")) {
-					algorithme = new AlgorithmeAEtoile();
+					algorithme = new AlgorithmeAEtoile(null);
 				}
 			}
 		});
@@ -94,7 +120,7 @@ public class CarteGUI extends JFrame {
 		}
 
 		if (caseDepart != null && caseArrivee != null) {
-			Chemin chemin = algorithme.trouverChemin(carte, caseDepart.getX(), caseDepart.getY(), caseArrivee.getX(),
+			Chemin chemin = AdaptateurAlgorithme.trouverChemin(algorithme,carte, caseDepart.getX(), caseDepart.getY(), caseArrivee.getX(),
 					caseArrivee.getY());
 			g.setColor(Color.RED);
 			for (Case c : chemin.getCases()) {
@@ -105,7 +131,7 @@ public class CarteGUI extends JFrame {
 
 	private void trouverChemin() {
 		if (caseDepart != null && caseArrivee != null) {
-			Chemin chemin = algorithme.trouverChemin(carte, caseDepart.getX(), caseDepart.getY(), caseArrivee.getX(),
+			Chemin chemin = AdaptateurAlgorithme.trouverChemin(algorithme,carte, caseDepart.getX(), caseDepart.getY(), caseArrivee.getX(),
 					caseArrivee.getY());
 			System.out.println("Chemin le plus court :");
 			for (Case c : chemin.getCases()) {
