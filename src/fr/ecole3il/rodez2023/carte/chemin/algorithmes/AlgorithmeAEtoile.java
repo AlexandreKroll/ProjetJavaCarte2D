@@ -17,13 +17,15 @@ public class AlgorithmeAEtoile<E> implements AlgorithmeChemin<E> {
     @Override
     public List<Noeud<E>> trouverChemin(Graphe<E> graphe, Noeud<E> depart, Noeud<E> arrivee) {
         Map<Noeud<E>, Double> couts = new HashMap<>();
+        Map<Noeud<E>, Double> coutsActuel = new HashMap<>();
         Map<Noeud<E>, Noeud<E>> predecesseurs = new HashMap<>();
-        PriorityQueue<Noeud<E>> filePriorite = new PriorityQueue<>(Comparator.comparingDouble(this::coutTotalEstime));
+        PriorityQueue<Noeud<E>> filePriorite = new PriorityQueue<>((n1, n2) -> (int) (couts.get(n1) - coutsActuel.get(n2)));
         Set<Noeud<E>> dejaVus = new HashSet<>();
 
         // Initialisation des structures de données
         for (Noeud<E> noeud : graphe.getNoeuds()) {
             couts.put(noeud, Double.POSITIVE_INFINITY);
+            coutsActuel.put(noeud, Double.POSITIVE_INFINITY);
             predecesseurs.put(noeud, null);
         }
         couts.put(depart, 0.0);
@@ -46,7 +48,8 @@ public class AlgorithmeAEtoile<E> implements AlgorithmeChemin<E> {
                     double nouveauCout = couts.get(noeudActuel) + graphe.getCoutArete(noeudActuel, voisin);
                     if (nouveauCout < couts.get(voisin)) {
                         couts.put(voisin, nouveauCout);
-                        predecesseurs.put(voisin, noeudActuel);
+                        coutsActuel.put(voisin, nouveauCout);
+                        predecesseurs.put(voisin, null);
                         filePriorite.add(voisin);
                     }
                 }
@@ -64,15 +67,7 @@ public class AlgorithmeAEtoile<E> implements AlgorithmeChemin<E> {
         return chemin;
     }
 
-    // Méthode pour calculer le coût total estimé d'un nœud (coût réel + estimation heuristique)
-    private double coutTotalEstime(Noeud<E> noeud) {
-        // Utilisation de la distance euclidienne comme heuristique
-        // Dans cet exemple, nous supposons que les nœuds ont des positions (x, y)
-        // Remplacer les valeurs 0.0 et 0.0 par les positions réelles des nœuds
-        double distanceEuclidienne = Math.sqrt(Math.pow(noeud.getPositionX() - arrivee.getPositionX(), 2) +
-                                               Math.pow(noeud.getPositionY() - arrivee.getPositionY(), 2));
-        return distanceEuclidienne;
-    }
+  
 
 	@Override
 	public Chemin trouverChemin(Carte carte, int x, int y, int x2, int y2) {
