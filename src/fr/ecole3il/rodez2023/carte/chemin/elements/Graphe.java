@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.ecole3il.rodez2023.carte.elements.Case;
+
 public class Graphe<E> {
-    private Map<Noeud<E>, List<Arete<E>>> adjacence;
+    private Map<Noeud<E>, Map<Noeud<E>,Double>> adjacence;
 
     public Graphe() {
         adjacence = new HashMap<>();
@@ -14,24 +16,24 @@ public class Graphe<E> {
 
     public void ajouterNoeud(Noeud<E> noeud) {
         if (!adjacence.containsKey(noeud)) {
-            adjacence.put(noeud, new ArrayList<>());
+            adjacence.put(noeud, new HashMap<>());
         }
     }
 
     public void ajouterArete(Noeud<E> depart, Noeud<E> arrivee, double cout) {
         ajouterNoeud(depart);
         ajouterNoeud(arrivee);
-        adjacence.get(depart).add(new Arete<>(arrivee, cout));
+        adjacence.get(depart).put(arrivee, cout);
         // Pour un graphe non orienté, ajouter également l'arête dans l'autre sens :
         // adjacence.get(arrivee).add(new Arete<>(depart, cout));
     }
 
     public double getCoutArete(Noeud<E> depart, Noeud<E> arrivee) {
-        for (Arete<E> arete : adjacence.get(depart)) {
-            if (arete.getNoeud().equals(arrivee)) {
-                return arete.getCout();
+        
+            if (adjacence.containsKey(depart) && adjacence.get(depart).containsKey(arrivee)) {
+                return adjacence.get(depart).get(arrivee);
             }
-        }
+        
         return Double.POSITIVE_INFINITY; // ou une valeur représentant l'absence de l'arête
     }
 
@@ -40,29 +42,22 @@ public class Graphe<E> {
     }
 
     public List<Noeud<E>> getVoisins(Noeud<E> noeud) {
-        List<Noeud<E>> voisins = new ArrayList<>();
-        for (Arete<E> arete : adjacence.getOrDefault(noeud, new ArrayList<>())) {
-            voisins.add(arete.getNoeud());
-        }
-        return voisins;
+    	if(adjacence.containsKey(noeud)) {
+    		return new ArrayList(adjacence.get(noeud).keySet());
+    	}
+        
+        return new ArrayList();
     }
 
-    private static class Arete<E> {
-        private Noeud<E> noeud;
-        private double cout;
+	public Noeud<E> getNoeud(int x, int y) {
+		for (Noeud<E> noeud : this.getNoeuds()) {
+			Case caseActuelle = (Case) noeud.getValeur();
+			if(caseActuelle.getX() == x && caseActuelle.getY() == y) {
+				return noeud;
+			}
+		}
+		return null;
+	}
 
-        public Arete(Noeud<E> noeud, double cout) {
-            this.noeud = noeud;
-            this.cout = cout;
-        }
-
-        public Noeud<E> getNoeud() {
-            return noeud;
-        }
-
-        public double getCout() {
-            return cout;
-        }
-    }
 }
 

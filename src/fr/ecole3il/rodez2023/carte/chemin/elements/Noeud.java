@@ -7,7 +7,6 @@ public class Noeud<E> {
     private E valeur;
     private List<Noeud<E>> voisins;
 
-    // Constructeur
     public Noeud(E valeur) {
         this.valeur = valeur;
         this.voisins = new ArrayList<>();
@@ -27,4 +26,6 @@ public class Noeud<E> {
     public void ajouterVoisin(Noeud<E> voisin) {
         voisins.add(voisin);
     }
+    
+    
 }

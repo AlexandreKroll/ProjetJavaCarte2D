@@ -1,5 +1,7 @@
 package fr.ecole3il.rodez2023.carte.elements;
 
+import java.util.Arrays;
+
 /**
  * La classe Carte représente une carte composée de tuiles disposées en une grille bidimensionnelle.
  * 
@@ -41,4 +43,26 @@ public class Carte {
     public int getHauteur() {
         return tuiles[0].length;
     }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.deepHashCode(tuiles);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Carte other = (Carte) obj;
+		return Arrays.deepEquals(tuiles, other.tuiles);
+	}
+    
+    
 }
