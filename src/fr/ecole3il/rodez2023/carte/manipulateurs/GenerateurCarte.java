@@ -1,9 +1,9 @@
 /**
+ /**
  * La classe GenerateurCarte est responsable de la génération de cartes en utilisant des tuiles aléatoires.
  * Elle fournit des méthodes pour générer une carte aléatoire avec des dimensions spécifiées ou avec des dimensions par défaut,
  * ainsi que pour afficher une carte donnée.
  * 
- * @author proussille
  */
 package fr.ecole3il.rodez2023.carte.manipulateurs;
 
@@ -20,6 +20,7 @@ public class GenerateurCarte {
 
     /**
      * Génère une carte aléatoire avec des dimensions par défaut.
+     * 
      * @return Une nouvelle instance de Carte générée aléatoirement.
      */
     public static Carte genererCarte() {
@@ -28,6 +29,7 @@ public class GenerateurCarte {
 
     /**
      * Génère une carte aléatoire avec les dimensions spécifiées.
+     * 
      * @param largeur La largeur de la carte à générer.
      * @param hauteur La hauteur de la carte à générer.
      * @return Une nouvelle instance de Carte générée aléatoirement avec les dimensions spécifiées.
@@ -46,6 +48,7 @@ public class GenerateurCarte {
 
     /**
      * Affiche la carte spécifiée sur la console.
+     * 
      * @param carte La carte à afficher.
      */
     public static void afficherCarte(Carte carte) {
@@ -59,6 +62,7 @@ public class GenerateurCarte {
 
     /**
      * Méthode principale pour tester la génération et l'affichage d'une carte aléatoire.
+     * 
      * @param args Les arguments de la ligne de commande (non utilisés dans cette application).
      */
     public static void main(String[] args) {

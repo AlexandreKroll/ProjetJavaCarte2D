@@ -7,9 +7,21 @@ import fr.ecole3il.rodez2023.carte.elements.Chemin;
 
 import java.util.*;
 
+/**
+ * Cette classe représente l'algorithme A* pour trouver un chemin dans un graphe.
+ * L'algorithme A* utilise une recherche heuristique pour trouver le chemin le plus court entre deux points.
+ * Il est efficace pour les graphes de grande taille.
+ *
+ * @param <E> le type des éléments dans le graphe
+ */
 public class AlgorithmeAEtoile<E> implements AlgorithmeChemin<E> {
     private Noeud<E> arrivee; // Noeud d'arrivée
 
+    /**
+     * Constructeur de la classe AlgorithmeAEtoile.
+     *
+     * @param arrivee le noeud d'arrivée pour le chemin
+     */
     public AlgorithmeAEtoile(Noeud<E> arrivee) {
         this.arrivee = arrivee;
     }
@@ -67,12 +79,12 @@ public class AlgorithmeAEtoile<E> implements AlgorithmeChemin<E> {
         return chemin;
     }
 
-  
-
-	@Override
-	public Chemin trouverChemin(Carte carte, int x, int y, int x2, int y2) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Chemin trouverChemin(Carte carte, int x, int y, int x2, int y2) {
+        // Cette méthode n'est pas implémentée pour cet algorithme
+        // car il fonctionne uniquement sur des graphes et non des cartes
+        return null;
+    }
 }
+
 

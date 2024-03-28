@@ -7,7 +7,22 @@ import fr.ecole3il.rodez2023.carte.elements.Chemin;
 
 import java.util.*;
 
+/**
+ * Cette classe implémente l'algorithme de Dijkstra pour trouver un chemin dans un graphe.
+ * Cet algorithme détermine le chemin le plus court entre un nœud de départ et un nœud d'arrivée.
+ *
+ * @param <E> le type des éléments dans le graphe
+ */
 public class AlgorithmeDijkstra<E> implements AlgorithmeChemin<E> {
+
+    /**
+     * Trouve un chemin dans un graphe entre un nœud de départ et un nœud d'arrivée en utilisant l'algorithme de Dijkstra.
+     *
+     * @param graphe   le graphe dans lequel rechercher le chemin
+     * @param depart   le nœud de départ du chemin
+     * @param arrivee  le nœud d'arrivée du chemin
+     * @return une liste de nœuds représentant le chemin trouvé
+     */
     @Override
     public List<Noeud<E>> trouverChemin(Graphe<E> graphe, Noeud<E> depart, Noeud<E> arrivee) {
         Map<Noeud<E>, Double> couts = new HashMap<>();
@@ -55,10 +70,18 @@ public class AlgorithmeDijkstra<E> implements AlgorithmeChemin<E> {
         return chemin;
     }
 
-	@Override
-	public Chemin trouverChemin(Carte carte, int x, int y, int x2, int y2) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    /**
+     * Cette méthode n'est pas implémentée pour cet algorithme car il fonctionne uniquement sur des graphes et non des cartes.
+     *
+     * @param carte la carte sur laquelle rechercher le chemin
+     * @param x     la coordonnée x du point de départ
+     * @param y     la coordonnée y du point de départ
+     * @param x2    la coordonnée x du point d'arrivée
+     * @param y2    la coordonnée y du point d'arrivée
+     * @return null
+     */
+    @Override
+    public Chemin trouverChemin(Carte carte, int x, int y, int x2, int y2) {
+        return null;
+    }
 }
-

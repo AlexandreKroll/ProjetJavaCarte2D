@@ -4,7 +4,10 @@ import java.util.Objects;
 
 /**
  * La classe Case représente une case sur une carte, caractérisée par une tuile et des coordonnées (x, y).
+ * 
  * Elle permet de conserver la position (x, y) d'une tuile sur une carte.
+ * 
+ * @author [Auteur]
  */
 public class Case {
     private Tuile tuile; // La tuile associée à cette case
@@ -13,9 +16,10 @@ public class Case {
 
     /**
      * Construit une nouvelle case avec la tuile spécifiée et les coordonnées (x, y) spécifiées.
+     * 
      * @param tuile La tuile associée à cette case.
-     * @param x La coordonnée x de la case sur la carte.
-     * @param y La coordonnée y de la case sur la carte.
+     * @param x     La coordonnée x de la case sur la carte.
+     * @param y     La coordonnée y de la case sur la carte.
      */
     public Case(Tuile tuile, int x, int y) {
         this.tuile = tuile;
@@ -25,6 +29,7 @@ public class Case {
 
     /**
      * Récupère la tuile associée à cette case.
+     * 
      * @return La tuile associée à cette case.
      */
     public Tuile getTuile() {
@@ -33,6 +38,7 @@ public class Case {
 
     /**
      * Récupère la coordonnée x de la case sur la carte.
+     * 
      * @return La coordonnée x de la case sur la carte.
      */
     public int getX() {
@@ -41,6 +47,7 @@ public class Case {
 
     /**
      * Récupère la coordonnée y de la case sur la carte.
+     * 
      * @return La coordonnée y de la case sur la carte.
      */
     public int getY() {
@@ -49,6 +56,7 @@ public class Case {
 
     /**
      * Renvoie une représentation textuelle de la case sous forme de chaîne de caractères.
+     * 
      * @return Une chaîne de caractères représentant la case avec sa tuile et ses coordonnées.
      */
     @Override
@@ -56,22 +64,21 @@ public class Case {
         return "Case [tuile=" + tuile + ", x=" + x + ", y=" + y + "]";
     }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(tuile, x, y);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(tuile, x, y);
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Case other = (Case) obj;
-		return tuile == other.tuile && x == other.x && y == other.y;
-	}
-    
-    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Case other = (Case) obj;
+        return tuile == other.tuile && x == other.x && y == other.y;
+    }
 }
+

@@ -27,156 +27,181 @@ import fr.ecole3il.rodez2023.carte.elements.Tuile;
 import fr.ecole3il.rodez2023.carte.manipulateurs.GenerateurCarte;
 
 /**
- * @author p.roquart
- * voilà
- * donc
- * c'est la classe finale pour le gui quoi
- * enfin je sais pas
- * moi j'aime pas le java
+ * Cette classe représente une interface graphique permettant de visualiser une carte de jeu
+ * et de trouver un chemin entre deux cases en utilisant différents algorithmes.
+ * Elle inclut également une boîte de sélection pour choisir l'algorithme de recherche de chemin.
+ * L'utilisateur peut sélectionner une case comme point de départ et une autre comme point d'arrivée
+ * en cliquant sur la carte, puis l'algorithme sélectionné est utilisé pour trouver et afficher le chemin le plus court.
  */
 public class CarteGUI extends JFrame {
-	private Carte carte;
-	private Case caseDepart;
-	private Case caseArrivee;
-	private AlgorithmeChemin algorithme;
+    private Carte carte;
+    private Case caseDepart;
+    private Case caseArrivee;
+    private AlgorithmeChemin algorithme;
 
-	public CarteGUI(Carte carte) {
-		this.carte = carte;
-		this.caseDepart = null;
-		this.caseArrivee = null;
-		this.algorithme = new AlgorithmeDijkstra(); // Algorithme par défaut
+    /**
+     * Constructeur de la classe CarteGUI.
+     * Initialise l'interface graphique avec une carte donnée.
+     *
+     * @param carte la carte de jeu à afficher
+     */
+    public CarteGUI(Carte carte) {
+        this.carte = carte;
+        this.caseDepart = null;
+        this.caseArrivee = null;
+        this.algorithme = new AlgorithmeDijkstra(); // Algorithme par défaut
 
-		setTitle("Carte");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(carte.getLargeur() * 32, carte.getHauteur() * 32 + 50); // +50 pour la ComboBox
-		setLocationRelativeTo(null);
+        setTitle("Carte");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(carte.getLargeur() * 32, carte.getHauteur() * 32 + 50); // +50 pour la ComboBox
+        setLocationRelativeTo(null);
 
-		JPanel cartePanel = new JPanel() {
-			@Override
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				dessinerCarte((Graphics2D) g);
-			}
-		};
-		cartePanel.setPreferredSize(new Dimension(carte.getLargeur() * 32, carte.getHauteur() * 32));
+        JPanel cartePanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                dessinerCarte((Graphics2D) g);
+            }
+        };
+        cartePanel.setPreferredSize(new Dimension(carte.getLargeur() * 32, carte.getHauteur() * 32));
 
-		JComboBox<String> algorithmeComboBox = new JComboBox<>(new String[] { "Dijkstra", "A*" });
-		algorithmeComboBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String choix = (String) algorithmeComboBox.getSelectedItem();
-				if (choix.equals("Dijkstra")) {
-					algorithme = new AlgorithmeDijkstra();
-				} else if (choix.equals("A*")) {
-					algorithme = new AlgorithmeAEtoile(null);
-				}
-			}
-		});
+        JComboBox<String> algorithmeComboBox = new JComboBox<>(new String[] { "Dijkstra", "A*" });
+        algorithmeComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String choix = (String) algorithmeComboBox.getSelectedItem();
+                if (choix.equals("Dijkstra")) {
+                    algorithme = new AlgorithmeDijkstra();
+                } else if (choix.equals("A*")) {
+                    algorithme = new AlgorithmeAEtoile(null);
+                }
+            }
+        });
 
-		add(algorithmeComboBox, BorderLayout.NORTH);
-		add(cartePanel);
+        add(algorithmeComboBox, BorderLayout.NORTH);
+        add(cartePanel);
 
-		cartePanel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int x = e.getX() / 32;
-				int y = e.getY() / 32;
+        cartePanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int x = e.getX() / 32;
+                int y = e.getY() / 32;
 
-				if (caseDepart == null) {
-					caseDepart = new Case(carte.getTuile(x, y), x, y);
-					System.out.println("Case de départ : [" + x + ", " + y + "]");
-				} else if (caseArrivee == null) {
-					caseArrivee = new Case(carte.getTuile(x, y), x, y);
-					System.out.println("Case d'arrivée : [" + x + ", " + y + "]");
-					trouverChemin();
-				} else {
-					caseDepart = new Case(carte.getTuile(x, y), x, y);
-					caseArrivee = null;
-					System.out.println("Nouvelle case de départ : [" + x + ", " + y + "]");
-				}
+                if (caseDepart == null) {
+                    caseDepart = new Case(carte.getTuile(x, y), x, y);
+                    System.out.println("Case de départ : [" + x + ", " + y + "]");
+                } else if (caseArrivee == null) {
+                    caseArrivee = new Case(carte.getTuile(x, y), x, y);
+                    System.out.println("Case d'arrivée : [" + x + ", " + y + "]");
+                    trouverChemin();
+                } else {
+                    caseDepart = new Case(carte.getTuile(x, y), x, y);
+                    caseArrivee = null;
+                    System.out.println("Nouvelle case de départ : [" + x + ", " + y + "]");
+                }
 
-				cartePanel.repaint();
-			}
-		});
-	}
+                cartePanel.repaint();
+            }
+        });
+    }
 
-	private void dessinerCarte(Graphics2D g) {
-		for (int x = 0; x < carte.getLargeur(); x++) {
-			for (int y = 0; y < carte.getHauteur(); y++) {
-				Tuile tuile = carte.getTuile(x, y);
-				BufferedImage imageTuile = getTuileImage(tuile);
-				g.drawImage(imageTuile, x * 32, y * 32, null);
+    /**
+     * Dessine la carte avec les cases, le point de départ, le point d'arrivée et le chemin.
+     *
+     * @param g le contexte graphique
+     */
+    private void dessinerCarte(Graphics2D g) {
+        for (int x = 0; x < carte.getLargeur(); x++) {
+            for (int y = 0; y < carte.getHauteur(); y++) {
+                Tuile tuile = carte.getTuile(x, y);
+                BufferedImage imageTuile = getTuileImage(tuile);
+                g.drawImage(imageTuile, x * 32, y * 32, null);
 
-				if (caseDepart != null && caseDepart.getX() == x && caseDepart.getY() == y) {
-					g.setColor(Color.BLUE);
-					g.drawRect(x * 32, y * 32, 32, 32);
-				}
+                if (caseDepart != null && caseDepart.getX() == x && caseDepart.getY() == y) {
+                    g.setColor(Color.BLUE);
+                    g.drawRect(x * 32, y * 32, 32, 32);
+                }
 
-				if (caseArrivee != null && caseArrivee.getX() == x && caseArrivee.getY() == y) {
-					g.setColor(Color.RED);
-					g.drawRect(x * 32, y * 32, 32, 32);
-				}
-			}
-		}
+                if (caseArrivee != null && caseArrivee.getX() == x && caseArrivee.getY() == y) {
+                    g.setColor(Color.RED);
+                    g.drawRect(x * 32, y * 32, 32, 32);
+                }
+            }
+        }
 
-		if (caseDepart != null && caseArrivee != null) {
-			Chemin chemin = AdaptateurAlgorithme.trouverChemin(algorithme,carte, caseDepart.getX(), caseDepart.getY(), caseArrivee.getX(),
-					caseArrivee.getY());
-			g.setColor(Color.RED);
-			for (Case c : chemin.getCases()) {
-				g.fillRect(c.getX() * 32, c.getY() * 32, 32, 32);
-			}
-		}
-	}
+        if (caseDepart != null && caseArrivee != null) {
+            Chemin chemin = AdaptateurAlgorithme.trouverChemin(algorithme,carte, caseDepart.getX(), caseDepart.getY(), caseArrivee.getX(),
+                    caseArrivee.getY());
+            g.setColor(Color.RED);
+            for (Case c : chemin.getCases()) {
+                g.fillRect(c.getX() * 32, c.getY() * 32, 32, 32);
+            }
+        }
+    }
 
-	private void trouverChemin() {
-		if (caseDepart != null && caseArrivee != null) {
-			Chemin chemin = AdaptateurAlgorithme.trouverChemin(algorithme,carte, caseDepart.getX(), caseDepart.getY(), caseArrivee.getX(),
-					caseArrivee.getY());
-			System.out.println("Chemin le plus court :");
-			for (Case c : chemin.getCases()) {
-				System.out.println("[" + c.getX() + ", " + c.getY() + "]");
-			}
-		}
-	}
+    /**
+     * Utilise l'algorithme sélectionné pour trouver le chemin entre la case de départ et la case d'arrivée.
+     */
+    private void trouverChemin() {
+        if (caseDepart != null && caseArrivee != null) {
+            Chemin chemin = AdaptateurAlgorithme.trouverChemin(algorithme,carte, caseDepart.getX(), caseDepart.getY(), caseArrivee.getX(),
+                    caseArrivee.getY());
+            System.out.println("Chemin le plus court :");
+            for (Case c : chemin.getCases()) {
+                System.out.println("[" + c.getX() + ", " + c.getY() + "]");
+            }
+        }
+    }
 
-	private BufferedImage getTuileImage(Tuile tuile) {
-		// Bon, j'ai pas eu le temps de faire les images
-		// mais ça marche
-		BufferedImage image = new BufferedImage(32, 32, BufferedImage.TYPE_INT_RGB);
-		Graphics2D g = image.createGraphics();
-		switch (tuile) {
-		case DESERT:
-			g.setColor(Color.YELLOW);
-			break;
-		case MONTAGNES:
-			g.setColor(Color.GRAY);
-			break;
-		case PLAINE:
-			g.setColor(Color.GREEN);
-			break;
-		case FORET:
-			g.setColor(Color.DARK_GRAY);
-			break;
-		}
-		g.fillRect(0, 0, 32, 32);
-		g.dispose();
-		return image;
-	}
+    /**
+     * Renvoie l'image correspondant à une tuile donnée.
+     *
+     * @param tuile la tuile à dessiner
+     * @return l'image de la tuile
+     */
+    private BufferedImage getTuileImage(Tuile tuile) {
+        // Bon, j'ai pas eu le temps de faire les images
+        // mais ça marche
+        BufferedImage image = new BufferedImage(32, 32, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = image.createGraphics();
+        switch (tuile) {
+            case DESERT:
+                g.setColor(Color.YELLOW);
+                break;
+            case MONTAGNES:
+                g.setColor(Color.GRAY);
+                break;
+            case PLAINE:
+                g.setColor(Color.GREEN);
+                break;
+            case FORET:
+                g.setColor(Color.DARK_GRAY);
+                break;
+        }
+        g.fillRect(0, 0, 32, 32);
+        g.dispose();
+        return image;
+    }
 
-	public static void main(String[] args) {
-		// Créer une carte de test
-		/*Tuile[][] tuiles = new Tuile[][] { { Tuile.DESERT, Tuile.MONTAGNES, Tuile.PLAINE },
-				{ Tuile.FORET, Tuile.DESERT, Tuile.PLAINE }, { Tuile.PLAINE, Tuile.MONTAGNES, Tuile.FORET } };*/
-		// J'ai mis ça en test
-		// Donc OKLM en commentaires
-		GenerateurCarte gen = new GenerateurCarte();
-		Carte carte = gen.genererCarte(10, 10);//new Carte(tuiles);
+    /**
+     * Méthode principale pour tester l'interface graphique.
+     *
+     * @param args les arguments de la ligne de commande (non utilisés)
+     */
+    public static void main(String[] args) {
+        // Créer une carte de test
+        /*Tuile[][] tuiles = new Tuile[][] { { Tuile.DESERT, Tuile.MONTAGNES, Tuile.PLAINE },
+                { Tuile.FORET, Tuile.DESERT, Tuile.PLAINE }, { Tuile.PLAINE, Tuile.MONTAGNES, Tuile.FORET } };*/
+        // J'ai mis ça en test
+        // Donc OKLM en commentaires
+        GenerateurCarte gen = new GenerateurCarte();
+        Carte carte = gen.genererCarte(10, 10);//new Carte(tuiles);
 
-		// Créer et afficher l'interface graphique
-		SwingUtilities.invokeLater(() -> {
-			CarteGUI carteGUI = new CarteGUI(carte);
-			carteGUI.setVisible(true);
-		});
-	}
+        // Créer et afficher l'interface graphique
+        SwingUtilities.invokeLater(() -> {
+            CarteGUI carteGUI = new CarteGUI(carte);
+            carteGUI.setVisible(true);
+        });
+    }
 }
+

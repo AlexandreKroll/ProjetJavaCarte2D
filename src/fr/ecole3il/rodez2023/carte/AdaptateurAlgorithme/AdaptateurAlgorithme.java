@@ -8,17 +8,23 @@ import fr.ecole3il.rodez2023.carte.elements.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdaptateurAlgorithme{
+/**
+ * Cette classe représente un adaptateur pour utiliser un algorithme de recherche de chemin
+ * sur une carte de jeu. Elle permet de trouver un chemin entre deux cases sur la carte.
+ */
+public class AdaptateurAlgorithme {
 
     /**
-     * trouve le chemin pour aller de la case une vers la deux
-     * @param algorithme algorithme à utiliser
-     * @param carte carte sur laquelle on ce situe
-     * @param xDepart coordonée x de départ
-     * @param yDepart coordonné y de départ
-     * @param xArrivee coordonnée x d'arrivé
-     * @param yArrivee coordonnée y d'arrivé
-     * @return le chemin trouvé
+     * Trouve le chemin pour aller de la case de départ à la case d'arrivée sur la carte donnée,
+     * en utilisant l'algorithme spécifié.
+     *
+     * @param algorithme l'algorithme à utiliser pour trouver le chemin
+     * @param carte la carte sur laquelle se situe le chemin
+     * @param xDepart la coordonnée x de la case de départ
+     * @param yDepart la coordonnée y de la case de départ
+     * @param xArrivee la coordonnée x de la case d'arrivée
+     * @param yArrivee la coordonnée y de la case d'arrivée
+     * @return le chemin trouvé entre les deux cases
      */
     public static Chemin trouverChemin(AlgorithmeChemin<Case> algorithme, Carte carte, int xDepart, int yDepart, int xArrivee, int yArrivee){
         Graphe<Case> graphe = creerGraphe(carte);
@@ -34,9 +40,10 @@ public class AdaptateurAlgorithme{
     }
 
     /**
-     * crée le graphe à partir d'une carte
-     * @param carte carte pour créer le graphe
-     * @return un Graphe
+     * Crée le graphe à partir d'une carte.
+     *
+     * @param carte la carte pour créer le graphe
+     * @return un graphe représentant la carte
      */
     static Graphe<Case> creerGraphe(Carte carte){
         Graphe<Case> graphe = new Graphe<>();
@@ -47,11 +54,11 @@ public class AdaptateurAlgorithme{
         for (int x = 0; x < largeur; x++) {
             for (int y = 0; y < hauteur; y++) {
                 Case caseActuelle = new Case(carte.getTuile(x, y), x, y);
-                graphe.ajouterNoeud(new Noeud<Case>(caseActuelle));
+                graphe.ajouterNoeud(new Noeud<>(caseActuelle));
             }
         }
 
-        // Pour je ne sais quelle raison, si je n'utilise pas de double boucle, ça ne fonctionne pas
+        // Création des arêtes entre les nœuds
         for (int x = 0; x < largeur; x++) {
             for (int y = 0; y < hauteur; y++) {
                 Case caseActuelle = new Case(carte.getTuile(x, y), x, y);
@@ -63,23 +70,17 @@ public class AdaptateurAlgorithme{
     }
 
     /**
-     * ajoute toute les arrêtes voisines
-     * @param graphe graphe sur lequel travailler
-     * @param currentCase case actuel
-     * @param x coordonée x
-     * @param y coordonée y
-     * @param largeur largeur de la case
-     * @param hauteur hauteur de la case
+     * Ajoute toutes les arêtes voisines pour un nœud donné.
+     *
+     * @param graphe le graphe sur lequel travailler
+     * @param currentCase la case actuelle
+     * @param x la coordonnée x de la case
+     * @param y la coordonnée y de la case
+     * @param largeur la largeur de la carte
+     * @param hauteur la hauteur de la carte
      */
     static void ajouterAretesVoisines(Graphe<Case> graphe, Case currentCase, int x, int y, int largeur, int hauteur){
-        Noeud<Case> currentNode = null;
-        for (Noeud<Case> noeud : graphe.getNoeuds()) {
-            Case c = noeud.getValeur();
-            if (c.equals(currentCase)) {
-                currentNode = noeud;
-                break;
-            }
-        }
+        Noeud<Case> currentNode = graphe.getNoeud(currentCase.getX(), currentCase.getY());
 
         assert currentNode != null;
 
@@ -101,18 +102,20 @@ public class AdaptateurAlgorithme{
     }
 
     /**
-     * calcul le cout
-     * @param from a partir de
-     * @param to jusqua
-     * @return cout calculé
+     * Calcule le coût entre deux cases.
+     *
+     * @param from la case de départ
+     * @param to la case d'arrivée
+     * @return le coût calculé entre les deux cases
      */
     static double calculerCout(Case from, Case to){
         return Math.abs(from.getX() - to.getX()) + Math.abs(from.getY() - to.getY());
     }
 
     /**
-     * Affiche le chemin
-     * @param chemin chemin a afficher
+     * Affiche les cases du chemin.
+     *
+     * @param chemin la liste des nœuds représentant le chemin
      */
     static void afficherChemin(List<Noeud<Case>> chemin){
         chemin.forEach(noeud -> {

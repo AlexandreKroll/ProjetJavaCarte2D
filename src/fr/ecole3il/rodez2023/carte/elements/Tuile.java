@@ -2,7 +2,10 @@ package fr.ecole3il.rodez2023.carte.elements;
 
 /**
  * L'énumération Tuile représente les différents types de tuiles pouvant être présents sur une carte.
+ * 
  * Chaque type de tuile a une pénalité associée.
+ * 
+ * @author [Auteur]
  */
 public enum Tuile {
     DESERT(1), // Tuile désert avec une pénalité de déplacement de 1
@@ -14,6 +17,7 @@ public enum Tuile {
 
     /**
      * Construit une nouvelle tuile avec la pénalité spécifiée.
+     * 
      * @param penalite La pénalité de déplacement associée à la tuile.
      */
     Tuile(int penalite) {
@@ -22,6 +26,7 @@ public enum Tuile {
 
     /**
      * Récupère la pénalité de déplacement associée à la tuile.
+     * 
      * @return La pénalité de déplacement associée à la tuile.
      */
     public int getPenalite() {
